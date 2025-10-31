@@ -5,7 +5,7 @@ import Tesseract from "tesseract.js";
 import { useStore } from "@/lib/store";
 
 export default function UploadSection() {
-  const { state, setState } = useStore();
+  const { addMedication } = useStore();
   const [files, setFiles] = useState<FileList | null>(null);
   const [extracted, setExtracted] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -33,26 +33,32 @@ export default function UploadSection() {
     setLoading(false);
   }
 
-  function confirmToMeds() {
+  async function confirmToMeds() {
     if (extracted.length === 0) return;
-    const newMeds = extracted.map((line, idx) => {
-      const parts = line.split(/\s+-\s+|\s+/);
-      const name = parts[0] || line;
-      const dosage = (line.match(/\d+\s*(mg|ml)/i) || [""])[0];
-      return {
-        id: `${Date.now()}-${idx}`,
-        name,
-        dosage: dosage || "",
-        frequency: "",
-        start: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short" }).replace(" ", " "),
-        end: "",
-        addedBy: "Upload",
-        updated: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
-      };
-    });
-    setState((prev) => ({ ...prev, medications: [...prev.medications, ...newMeds] }));
-    setExtracted([]);
-    setFiles(null);
+    
+    try {
+      for (const line of extracted) {
+        const parts = line.split(/\s+-\s+|\s+/);
+        const name = parts[0] || line;
+        const dosage = (line.match(/\d+\s*(mg|ml)/i) || [""])[0];
+        
+        await addMedication({
+          name,
+          dosage: dosage || "",
+          frequency: "",
+          start: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short" }).replace(" ", " "),
+          end: "",
+          addedBy: "Upload",
+          updated: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+        });
+      }
+      
+      setExtracted([]);
+      setFiles(null);
+    } catch (error: any) {
+      console.error("Failed to add medications:", error);
+      alert(`Failed to add medications: ${error.message || "Unknown error"}`);
+    }
   }
 
   return (

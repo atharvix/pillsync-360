@@ -1,23 +1,39 @@
 "use client";
 
 import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import { QRCodeSVG } from "qrcode.react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import { db } from "@/src/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function EmergencyButton() {
   const { state } = useStore();
+  const { user } = useAuth();
   const [linkId, setLinkId] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
 
-  function generate() {
-    const id = `${Date.now()}`;
-    const summary = {
-      patient: state.profile,
-      medications: state.medications,
-      ts: new Date().toISOString(),
-      expiresAt: Date.now() + 30 * 60 * 1000
-    };
-    localStorage.setItem(`hc_emergency_${id}`, JSON.stringify(summary));
-    setLinkId(id);
+  async function generate() {
+    if (!user) return;
+    setGenerating(true);
+    try {
+      const expiresAt = Date.now() + 30 * 60 * 1000; // 30 minutes
+      const summary = {
+        userId: user.uid,
+        patient: state.profile,
+        medications: state.medications,
+        ts: new Date().toISOString(),
+        expiresAt,
+        createdAt: serverTimestamp()
+      };
+      
+      const docRef = await addDoc(collection(db, "emergencyCards"), summary);
+      setLinkId(docRef.id);
+    } catch (error) {
+      console.error("Failed to generate emergency card:", error);
+    } finally {
+      setGenerating(false);
+    }
   }
 
   return (
@@ -26,7 +42,13 @@ export default function EmergencyButton() {
         <h2 className="text-lg font-semibold">Emergency</h2>
       </div>
       <div className="flex flex-col items-start gap-3">
-        <button onClick={generate} className="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700">🚨 Generate Smart Med Card</button>
+        <button 
+          onClick={generate} 
+          disabled={generating || !user}
+          className="inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60"
+        >
+          {generating ? "Generating..." : "🚨 Generate Smart Med Card"}
+        </button>
         {linkId && (
           <div className="mt-2 flex items-center gap-4">
             <QRCodeSVG value={`${location.origin}/emergency/${linkId}`} size={96} />

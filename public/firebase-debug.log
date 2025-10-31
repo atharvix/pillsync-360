@@ -1,0 +1,21 @@
+[debug] [2025-10-31T19:29:47.843Z] ----------------------------------------------------------------------
+[debug] [2025-10-31T19:29:47.845Z] Command:       E:\Program Files\nodejs\node.exe C:\Users\mehro\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only firestore:rules
+[debug] [2025-10-31T19:29:47.845Z] CLI Version:   14.23.0
+[debug] [2025-10-31T19:29:47.845Z] Platform:      win32
+[debug] [2025-10-31T19:29:47.845Z] Node Version:  v22.16.0
+[debug] [2025-10-31T19:29:47.846Z] Time:          Sat Nov 01 2025 00:59:47 GMT+0530 (India Standard Time)
+[debug] [2025-10-31T19:29:47.846Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-10-31T19:29:48.033Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T19:29:48.033Z] > authorizing via signed-in user (mehrotraatharv15@gmail.com)
+[debug] [2025-10-31T19:29:48.033Z] [iam] checking project pillsync-360 for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2025-10-31T19:29:48.034Z] Checked if tokens are valid: false, expires at: 1761935142393
+[debug] [2025-10-31T19:29:48.034Z] Checked if tokens are valid: false, expires at: 1761935142393
+[debug] [2025-10-31T19:29:48.035Z] > refreshing access token with scopes: []
+[debug] [2025-10-31T19:29:48.036Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-10-31T19:29:48.036Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-31T19:29:48.432Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-10-31T19:29:48.432Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-31T19:29:48.440Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/pillsync-360:testIamPermissions [none]
+[debug] [2025-10-31T19:29:48.440Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/pillsync-360:testIamPermissions x-goog-quota-user=projects/pillsync-360
+[debug] [2025-10-31T19:29:48.440Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/pillsync-360:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
